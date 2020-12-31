@@ -1,0 +1,13 @@
+Reign
+Marcus Aurelius: 10
+Antonius Pius: 2
+Commodus: 1
+
+Mint
+Rome: 13
+
+Denomination
+Denarius: 13
+
+Material
+Silver: 13

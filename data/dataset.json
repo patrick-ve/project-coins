@@ -1,0 +1,21 @@
+[
+    {
+        "id": 10020,
+        "totalCoins": 13,
+        "reign": {
+            "Marcus Aurelius": 10,
+            "Antonius Pius": 2,
+            "Commodus": 1
+        },
+        "mint": {
+            "Rome": 13
+        },
+        "denomination": {
+            "Denarius": 13
+        },
+        "material": {
+            "silver": 13
+        }
+    }
+]
+
