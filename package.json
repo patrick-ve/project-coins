@@ -11,6 +11,7 @@
   "dependencies": {
     "d3": "^6.3.1",
     "d3-fetch": "^2.0.0",
+    "dotenv": "^8.2.0",
     "node-fetch-polyfill": "^2.0.6",
     "puppeteer": "^5.5.0",
     "puppeteer-cluster": "^0.22.0"

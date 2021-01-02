@@ -1,8 +1,15 @@
+// Dependencies
+require('dotenv').config()
+
 if (typeof fetch !== 'function') {
     global.fetch = require('node-fetch-polyfill');
 }
 const csv = require('d3-fetch').csv;
 const { Cluster } = require('puppeteer-cluster');
+
+// Credentials and DOM selectors
+// const username = process.env.LOGIN_USER
+// const password = process.env.LOGIN_PASSWORD
 
 (async () => {
     // Create a cluster with 2 workers
@@ -17,8 +24,11 @@ const { Cluster } = require('puppeteer-cluster');
             const csvFileURI = url + '/csv/coins';
             
             csv(csvFileURI)
-                .then((data) => {
-                    console.log(data)
+                .then((coinCollection) => {
+                    console.info(coinCollection[0])
+                })
+                .catch(() => {
+                    return 
                 })
         } catch (err) {
             console.error(err)
@@ -31,11 +41,6 @@ const { Cluster } = require('puppeteer-cluster');
         const url = `https://chre.ashmus.ox.ac.uk/hoard/${stringifiedNumber}`
         cluster.queue(url)
     }
-    
-    // Add some pages to queue
-    // cluster.queue('https://www.google.com');
-    // cluster.queue('https://www.wikipedia.org');
-    // cluster.queue('https://github.com/');
     
     // Shutdown after everything is done
     await cluster.idle();
