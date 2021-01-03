@@ -6,6 +6,7 @@ if (typeof fetch !== 'function') {
 }
 const csv = require('d3-fetch').csv;
 const { Cluster } = require('puppeteer-cluster');
+const fs = require('fs');
 
 // Credentials and DOM selectors
 // const username = process.env.LOGIN_USER
@@ -15,8 +16,8 @@ const { Cluster } = require('puppeteer-cluster');
     // Create a cluster with 2 workers
     const cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
-        maxConcurrency: 5,
-        monitor: true,
+        maxConcurrency: 1,
+        // monitor: true,
     });
     
     // Define a task (in this case: fetch and parse CSV)
@@ -91,7 +92,21 @@ const { Cluster } = require('puppeteer-cluster');
                     coinEntry.mint = mintArray
                     coinEntry.denomination = denominationArray
                     coinEntry.material = materialArray
-                    console.log(JSON.stringify(coinEntry))
+
+                    fs.readFile('./data/dataset.json', 'utf-8', (err, data) => {
+                        if (err) {
+                            console.log(err)
+                        }
+
+                        const file = JSON.parse(data)
+                        file.coins.push(coinEntry)
+                        console.log(file)
+
+                        fs.writeFile('./data/dataset.json', JSON.stringify(file), 'utf-8', (err) => {
+                            if (err) throw err
+                            console.log('Done!')
+                        })
+                    })
                 })
                 .catch(() => {
                     return 
@@ -102,7 +117,7 @@ const { Cluster } = require('puppeteer-cluster');
         
     });
 
-    for (number = 10000; number < 10004; number++) {
+    for (number = 10000; number < 10005; number++) {
         const stringifiedNumber = '' + number
         const url = `https://chre.ashmus.ox.ac.uk/hoard/${stringifiedNumber}`
         cluster.queue(url)

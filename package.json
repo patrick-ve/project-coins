@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "party": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "scrape": "node app.js"
   },
   "author": "Patrick van Everdingen",
   "license": "MIT",
@@ -12,6 +13,7 @@
     "d3": "^6.3.1",
     "d3-fetch": "^2.0.0",
     "dotenv": "^8.2.0",
+    "lowdb": "^1.0.0",
     "node-fetch-polyfill": "^2.0.6",
     "puppeteer": "^5.5.0",
     "puppeteer-cluster": "^0.22.0"
