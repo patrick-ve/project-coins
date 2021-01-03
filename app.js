@@ -15,7 +15,8 @@ const { Cluster } = require('puppeteer-cluster');
     // Create a cluster with 2 workers
     const cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
-        maxConcurrency: 2,
+        maxConcurrency: 5,
+        monitor: true,
     });
     
     // Define a task (in this case: fetch and parse CSV)
@@ -90,7 +91,7 @@ const { Cluster } = require('puppeteer-cluster');
                     coinEntry.mint = mintArray
                     coinEntry.denomination = denominationArray
                     coinEntry.material = materialArray
-                    console.log(coinEntry)
+                    console.log(JSON.stringify(coinEntry))
                 })
                 .catch(() => {
                     return 
@@ -101,7 +102,7 @@ const { Cluster } = require('puppeteer-cluster');
         
     });
 
-    for (number = 10000; number < 10005; number++) {
+    for (number = 10000; number < 10004; number++) {
         const stringifiedNumber = '' + number
         const url = `https://chre.ashmus.ox.ac.uk/hoard/${stringifiedNumber}`
         cluster.queue(url)
@@ -111,8 +112,6 @@ const { Cluster } = require('puppeteer-cluster');
     await cluster.idle();
     await cluster.close();
 })();
-
-
 
 // https://stackoverflow.com/questions/51317742/finding-the-frequency-of-a-key-value-pair-in-an-object-in-javascript
 // https://stackoverflow.com/questions/38000705/counting-instances-of-key-value-pairs-in-json-file-in-javascript
