@@ -12,6 +12,8 @@ const fs = require('fs');
 // const username = process.env.LOGIN_USER
 // const password = process.env.LOGIN_PASSWORD
 
+// Read JSON and empty array
+
 (async () => {
     // Create a cluster with 2 workers
     const cluster = await Cluster.launch({
@@ -19,12 +21,12 @@ const fs = require('fs');
         maxConcurrency: 1,
         // monitor: true,
     });
-    
+
     // Define a task (in this case: fetch and parse CSV)
     await cluster.task(async ({ page, data: url }) => {
         try {
             const csvFileURI = url + '/csv/coins';
-            
+
             csv(csvFileURI)
                 .then((coinCollections) => {
                     let entryNumber = +url.substr(url.lastIndexOf('/') + 1)
@@ -36,21 +38,21 @@ const fs = require('fs');
                     let denominationMap = {}
 
                     for (let coinCollection of coinCollections) {
-                        coinCollection.material in materialMap 
-                            ? materialMap[coinCollection.material] = materialMap[coinCollection.material] + 1 
-                            : materialMap[coinCollection.material] = 1 
+                        coinCollection.material in materialMap
+                            ? materialMap[coinCollection.material] = materialMap[coinCollection.material] + 1
+                            : materialMap[coinCollection.material] = 1
 
                         coinCollection.person in reignMap
-                            ? reignMap[coinCollection.person] = reignMap[coinCollection.person] + 1 
-                            : reignMap[coinCollection.person] = 1 
+                            ? reignMap[coinCollection.person] = reignMap[coinCollection.person] + 1
+                            : reignMap[coinCollection.person] = 1
 
-                        coinCollection.mint in mintMap 
-                            ? mintMap[coinCollection.mint] = mintMap[coinCollection.mint] + 1 
-                            : mintMap[coinCollection.mint] = 1 
+                        coinCollection.mint in mintMap
+                            ? mintMap[coinCollection.mint] = mintMap[coinCollection.mint] + 1
+                            : mintMap[coinCollection.mint] = 1
 
                         coinCollection.denomination in denominationMap
-                            ? denominationMap[coinCollection.denomination] = denominationMap[coinCollection.denomination] + 1 
-                            : denominationMap[coinCollection.denomination] = 1 
+                            ? denominationMap[coinCollection.denomination] = denominationMap[coinCollection.denomination] + 1
+                            : denominationMap[coinCollection.denomination] = 1
                     }
 
                     let materialArray = []
@@ -100,24 +102,23 @@ const fs = require('fs');
 
                         const file = JSON.parse(data)
                         file.coins.push(coinEntry)
-                        console.log(file)
+                        file.coins.sort((a, b) => parseFloat(a.id) - parseFloat(b.id));
 
                         fs.writeFile('./data/dataset.json', JSON.stringify(file), 'utf-8', (err) => {
                             if (err) throw err
-                            console.log('Done!')
                         })
                     })
                 })
                 .catch(() => {
-                    return 
+                    return
                 })
         } catch (err) {
             console.error(err)
         }
-        
+
     });
 
-    for (number = 10000; number < 10005; number++) {
+    for (number = 10000; number < 10500; number++) {
         const stringifiedNumber = '' + number
         const url = `https://chre.ashmus.ox.ac.uk/hoard/${stringifiedNumber}`
         cluster.queue(url)
