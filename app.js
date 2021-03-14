@@ -8,18 +8,22 @@ const csv = require('d3-fetch').csv;
 const { Cluster } = require('puppeteer-cluster');
 const fs = require('fs');
 
-// Credentials and DOM selectors
-// const username = process.env.LOGIN_USER
-// const password = process.env.LOGIN_PASSWORD
+// Controllers
+const controller = require('./controllers/emptyDataset');
 
-// Read JSON and empty array
+// Credentials and DOM selectors
+const username = process.env.LOGIN_USER;
+const password = process.env.LOGIN_PASSWORD;
+
+// Read JSON and empty array from dataset
+// controller.emptyData();
 
 (async () => {
     // Create a cluster with 2 workers
     const cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
         maxConcurrency: 1,
-        // monitor: true,
+        monitor: true,
     });
 
     // Define a task (in this case: fetch and parse CSV)
@@ -95,7 +99,7 @@ const fs = require('fs');
                     coinEntry.denomination = denominationArray
                     coinEntry.material = materialArray
 
-                    fs.readFile('./data/dataset.json', 'utf-8', (err, data) => {
+                    fs.readFileSync('./data/dataset.json', 'utf-8', (err, data) => {
                         if (err) {
                             console.log(err)
                         }
@@ -104,7 +108,7 @@ const fs = require('fs');
                         file.coins.push(coinEntry)
                         file.coins.sort((a, b) => parseFloat(a.id) - parseFloat(b.id));
 
-                        fs.writeFile('./data/dataset.json', JSON.stringify(file), 'utf-8', (err) => {
+                        fs.writeFileSync('./data/dataset.json', JSON.stringify(file), 'utf-8', (err) => {
                             if (err) throw err
                         })
                     })
@@ -118,7 +122,7 @@ const fs = require('fs');
 
     });
 
-    for (number = 10000; number < 10500; number++) {
+    for (number = 10000; number < 10050; number++) {
         const stringifiedNumber = '' + number
         const url = `https://chre.ashmus.ox.ac.uk/hoard/${stringifiedNumber}`
         cluster.queue(url)
